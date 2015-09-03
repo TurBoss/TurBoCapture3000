@@ -19,6 +19,7 @@
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/calib3d.hpp"
+#include "opencv2/stitching.hpp"
 #include "opencv2/xfeatures2d.hpp"
 
 using namespace cv;
@@ -179,9 +180,8 @@ int TurBoCapture::capture (const char *filename) {
     }
 }
 
-void TurBoCapture::stich(const char *fileA, const char *fileB)
+void TurBoCapture::stich(const char *fileA, const char *fileB, const int ori)
 {
-
     // Load the images
     Mat img_1 = imread( fileB );
     Mat img_2 = imread( fileA );
@@ -264,6 +264,32 @@ void TurBoCapture::stich(const char *fileA, const char *fileB)
     img_2.copyTo(half);
 
     imwrite("pictures/result.tiff", result);
+}
+
+void TurBoCapture::stichv2(const char *fileA, const char *fileB, const int ori)
+{
+    vector< Mat > vImg;
+    Mat rImg;
+
+    vImg.push_back( imread(fileA) );
+    vImg.push_back( imread(fileB) );
+
+
+    Stitcher stitcher = Stitcher::createDefault();
+
+
+    unsigned long AAtime=0, BBtime=0; //check processing time
+    AAtime = getTickCount(); //check processing time
+
+    Stitcher::Status status = stitcher.stitch(vImg, rImg);
+
+    BBtime = getTickCount(); //check processing time
+    printf("%.2lf sec \n",  (BBtime - AAtime)/getTickFrequency() ); //check processing time
+
+    if (Stitcher::OK == status)
+        imwrite("pictures/result.tiff",rImg);
+    else
+        printf("Stitching fail.\n");
 }
 
 void TurBoCapture::addTreeRoot(QString name)
@@ -391,7 +417,13 @@ void TurBoCapture::on_compileButton_clicked()
 {
     printf("Compile\n");
 
-    stich("pictures/image_1.tiff", "pictures/image_2.tiff");
+    stichv2("pictures/1.jpg", "pictures/2.jpg", 0);
+
+
+    printf("Done\n");
+    QMessageBox msgBox;
+    msgBox.setText("Compilation finished.");
+    msgBox.exec();
 }
 
 void TurBoCapture::on_newRowButton_clicked()

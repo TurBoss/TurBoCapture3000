@@ -26,7 +26,8 @@ LIBS += -L/usr/local/lib \
     -lopencv_flann \
     -lopencv_imgcodecs \
     -lopencv_highgui \
-    -lopencv_xfeatures2d
+    -lopencv_xfeatures2d \
+    -lopencv_stitching
 
 
 SOURCES += main.cpp\
