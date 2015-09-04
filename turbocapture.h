@@ -34,9 +34,11 @@ private slots:
 
     int capture (const char *filename);
 
-    void stich(const char *fileA, const char *fileB, const int ori );
+    void stich(const char *fileA, const char *fileB);
 
-    void stichv2(const char *fileA, const char *fileB, const int ori);
+    void stichv2(const char *fileA, const char *fileB);
+
+    void stichv2_video(const char *file);
 
     void on_quitButton_clicked();
 

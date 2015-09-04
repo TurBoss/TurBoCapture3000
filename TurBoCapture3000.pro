@@ -14,6 +14,7 @@ TEMPLATE = app
 INCLUDEPATH += /usr/local/include/opencv
 
 LIBS += -L/usr/local/lib \
+    -lserial \
     -lgphoto2 \
     -lopencv_core \
     -lopencv_imgproc \
@@ -28,7 +29,6 @@ LIBS += -L/usr/local/lib \
     -lopencv_highgui \
     -lopencv_xfeatures2d \
     -lopencv_stitching
-
 
 SOURCES += main.cpp\
         turbocapture.cpp\

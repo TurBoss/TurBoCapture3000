@@ -11,6 +11,8 @@
 
 #include <QMessageBox>
 
+#include <SerialPort.h>
+
 #include <gphoto2/gphoto2-camera.h>
 
 #include <opencv2/opencv.hpp>
@@ -180,7 +182,7 @@ int TurBoCapture::capture (const char *filename) {
     }
 }
 
-void TurBoCapture::stich(const char *fileA, const char *fileB, const int ori)
+void TurBoCapture::stich(const char *fileA, const char *fileB)
 {
     // Load the images
     Mat img_1 = imread( fileB );
@@ -266,7 +268,7 @@ void TurBoCapture::stich(const char *fileA, const char *fileB, const int ori)
     imwrite("pictures/result.tiff", result);
 }
 
-void TurBoCapture::stichv2(const char *fileA, const char *fileB, const int ori)
+void TurBoCapture::stichv2(const char *fileA, const char *fileB)
 {
     vector< Mat > vImg;
     Mat rImg;
@@ -286,10 +288,64 @@ void TurBoCapture::stichv2(const char *fileA, const char *fileB, const int ori)
     BBtime = getTickCount(); //check processing time
     printf("%.2lf sec \n",  (BBtime - AAtime)/getTickFrequency() ); //check processing time
 
-    if (Stitcher::OK == status)
+    if (Stitcher::OK == status){
         imwrite("pictures/result.tiff",rImg);
-    else
+        printf("Done\n");
+        QMessageBox msgBox;
+        msgBox.setText("Compilation finished.");
+        msgBox.exec();
+    }
+    else{
+        QMessageBox msgBox;
+        msgBox.setText("Compilation failed.");
+        msgBox.exec();
         printf("Stitching fail.\n");
+    }
+}
+
+void TurBoCapture::stichv2_video(const char *file)
+{
+    vector< Mat > vImg;
+    Mat rImg;
+    Mat frame;
+
+    VideoCapture cap(file); // open the default camera
+    if(cap.isOpened()){  // check if we succeeded
+        int i = 0;
+        while (i < 2) {
+            cap >> frame;
+
+            vImg.push_back( frame );
+            printf("Add Frame %i\n", i);
+            i++;
+        }
+
+
+    }
+    Stitcher stitcher = Stitcher::createDefault();
+
+
+    unsigned long AAtime=0, BBtime=0; //check processing time
+    AAtime = getTickCount(); //check processing time
+
+    Stitcher::Status status = stitcher.stitch(vImg, rImg);
+
+    BBtime = getTickCount(); //check processing time
+    printf("%.2lf sec \n",  (BBtime - AAtime)/getTickFrequency() ); //check processing time
+
+    if (Stitcher::OK == status){
+        imwrite("pictures/result.tiff",rImg);
+        printf("Done\n");
+        QMessageBox msgBox;
+        msgBox.setText("Compilation finished.");
+        msgBox.exec();
+    }
+    else{
+        QMessageBox msgBox;
+        msgBox.setText("Compilation failed.");
+        msgBox.exec();
+        printf("Stitching fail.\n");
+    }
 }
 
 void TurBoCapture::addTreeRoot(QString name)
@@ -417,13 +473,8 @@ void TurBoCapture::on_compileButton_clicked()
 {
     printf("Compile\n");
 
-    stichv2("pictures/1.jpg", "pictures/2.jpg", 0);
-
-
-    printf("Done\n");
-    QMessageBox msgBox;
-    msgBox.setText("Compilation finished.");
-    msgBox.exec();
+    stichv2("pictures/1.tiff", "pictures/2.tiff");
+    //stichv2_video("pictures/01.mpeg");
 }
 
 void TurBoCapture::on_newRowButton_clicked()
