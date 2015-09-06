@@ -92,7 +92,7 @@ TurBoCapture::~TurBoCapture()
 
     delete ui;
 
-    if (!ret) {
+    if (ret == GP_OK) {
         // close camera
         gp_camera_unref(camera);
         gp_context_unref(context);
@@ -387,7 +387,7 @@ void TurBoCapture::on_takeFrameButton_clicked()
 {
 
 
-    if (!ret) {
+    if (ret == GP_OK) {
 
         // take 1 shot
         char filename[32];
