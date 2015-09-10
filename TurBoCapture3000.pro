@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT      += core gui
+QT      += concurrent widgets serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,6 +15,7 @@ TEMPLATE = app
 INCLUDEPATH += /usr/local/include/opencv
 
 LIBS += -L/usr/local/lib \
+    -lQt5Concurrent \
     -lserial \
     -lgphoto2 \
     -lopencv_core \

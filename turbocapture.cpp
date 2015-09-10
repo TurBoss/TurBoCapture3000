@@ -1,3 +1,22 @@
+/*
+* Copyright (C) 2015 Jose Luis Toledano Lopez <j.l.toledano.l@gmail.com>
+*
+* This file is part of TurBoCapture3000.
+*
+* TurBoCapture3000 is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+
+* TurBoCapture3000 is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with ImageQ. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "turbocapture.h"
 #include "ui_turbocapture.h"
 
@@ -9,9 +28,9 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-#include <QMessageBox>
+#include <QtSerialPort/QSerialPort>
 
-#include <SerialPort.h>
+#include <QMessageBox>
 
 #include <gphoto2/gphoto2-camera.h>
 
@@ -34,25 +53,7 @@ TurBoCapture::TurBoCapture(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
-    gp_camera_new (&camera);
-    context = gp_context_new();
-
-    gp_context_set_error_func (context, ctx_error_func, NULL);
-    gp_context_set_status_func (context, ctx_status_func, NULL);
-
-    ret = gp_camera_init(camera, context);
-
-    if (ret < GP_OK) {
-        QMessageBox msgBox;
-        msgBox.setText("No camera auto detected.");
-        msgBox.exec();
-        printf("No camera auto detected.\n");
-        gp_camera_free(camera);
-    }
-
-
-
+    //Init GUI
 
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
@@ -85,12 +86,65 @@ TurBoCapture::TurBoCapture(QWidget *parent) :
 
     ui->treeWidget->setColumnCount(2);
     ui->treeWidget->setHeaderLabels(QStringList() << "Colum" << "Name");
+
+
+    txLedScene = new QGraphicsScene(this);
+    ui->TxLed->setScene(txLedScene);
+
+    rxLedScene = new QGraphicsScene(this);
+    ui->RxLed->setScene(txLedScene);
+
+    QBrush txLedBrush(Qt::green);
+    QBrush txLedOffBrush(Qt::white);
+    QPen txLedPen(Qt::black);
+
+    QBrush rxLedBrush(Qt::green);
+    QBrush rxLedOffBrush(Qt::white);
+    QPen rxLedPen(Qt::black);
+
+    txLedItem = txLedScene->addRect(0, 0, 15, 15, txLedPen, txLedBrush);
+    rxLedItem = rxLedScene->addRect(0, 0, 15, 15, rxLedPen, rxLedBrush);
+
+    txLedScene->clear();
+    rxLedScene->clear();
+
+    txLedItem = txLedScene->addRect(0, 0, 15, 15, txLedPen, txLedOffBrush);
+    rxLedItem = rxLedScene->addRect(0, 0, 15, 15, rxLedPen, rxLedOffBrush);
+
+
+    //Init Serial Port
+
+    //-- Open the serial port
+    serial = new QSerialPort(this);
+    openSerialPort();
+
+    //Init Camera
+
+    gp_camera_new (&camera);
+    context = gp_context_new();
+
+    gp_context_set_error_func (context, ctx_error_func, NULL);
+    gp_context_set_status_func (context, ctx_status_func, NULL);
+
+    ret = gp_camera_init(camera, context);
+
+    if (ret < GP_OK) {
+        QMessageBox msgBox;
+        msgBox.setText("No camera auto detected.");
+        msgBox.exec();
+        printf("No camera auto detected.\n");
+        gp_camera_free(camera);
+    }
+    else
+        ui->camStatusLabel->setText("Online");
 }
 
 TurBoCapture::~TurBoCapture()
 {
 
     delete ui;
+
+    closeSerialPort();
 
     if (ret == GP_OK) {
         // close camera
@@ -111,7 +165,7 @@ void TurBoCapture::ctx_status_func (GPContext *context, const char *str, void *d
         fflush   (stderr);
 }
 
-int TurBoCapture::capture (const char *filename) {
+void TurBoCapture::capture (const char *filename) {
 
     int fd, retval;
     CameraFile *file;
@@ -354,17 +408,102 @@ void TurBoCapture::addTreeRoot(QString name)
     pic_cols->setText(0, name);
 }
 
-void TurBoCapture::addTreeChild(QTreeWidgetItem *parent,
-                  QString name)
+void TurBoCapture::addTreeChild(QTreeWidgetItem *parent, QString name)
 {
     pic_rows = new QTreeWidgetItem(pic_cols);
     parent->setText(1,name);
     parent->addChild(pic_rows);
 }
 
+void TurBoCapture::ledOn(const char *led){
+
+    QBrush ledBrush(Qt::green);
+    QBrush ledOffBrush(Qt::white);
+    QPen ledPen(Qt::black);
+
+    if (strcmp( led, "TX") == 0){
+        txLedScene->clear();
+        txLedItem = txLedScene->addRect(0, 0, 15, 15, ledPen, ledBrush);
+    }
+    else if  (strcmp( led, "RX") == 0){
+        rxLedScene->clear();
+        rxLedItem = rxLedScene->addRect(0, 0, 15, 15, ledPen, ledBrush);
+    }
+}
+
+void TurBoCapture::ledOff(const char *led){
+
+    QBrush ledBrush(Qt::green);
+    QBrush ledOffBrush(Qt::white);
+    QPen ledPen(Qt::black);
+
+    if (strcmp( led, "TX") == 0){
+        txLedScene->clear();
+        txLedItem = txLedScene->addRect(0, 0, 15, 15, ledPen, ledOffBrush);
+    }
+    else if  (strcmp( led, "RX") == 0){
+        rxLedScene->clear();
+        rxLedItem = rxLedScene->addRect(0, 0, 15, 15, ledPen, ledOffBrush);
+    }
+
+}
+
 void TurBoCapture::on_quitButton_clicked()
 {
     qApp->quit();
+}
+
+void TurBoCapture::openSerialPort()
+{
+    serial->setPortName("/dev/ttyACM0");
+
+    if(serial->open(QIODevice::ReadWrite)){
+        serial->setBaudRate(QSerialPort::Baud9600);
+        serial->setDataBits(QSerialPort::Data8);
+        serial->setParity(QSerialPort::NoParity);
+        serial->setStopBits(QSerialPort::OneStop);
+        serial->setFlowControl(QSerialPort::NoFlowControl);
+        ui->serialPortStatus->setText("/dev/ttyACM0");
+    }
+    else{
+        QMessageBox msgBox;
+        msgBox.setText("No Serial Port.");
+        msgBox.exec();
+    }
+}
+
+void TurBoCapture::writeData(const QByteArray &data)
+{
+    ledOn("TX");
+    serial->write(data);
+    ledOff("TX");
+}
+
+void TurBoCapture::readData()
+{
+    QByteArray data = serial->readAll();
+}
+
+void TurBoCapture::runMotor(){
+
+    QByteArray msg("1");
+    QByteArray stx("STX");
+    QByteArray etx("ETX");
+
+    writeData(stx);
+
+    forever{
+        if(!running) break;
+        writeData(msg);
+    }
+
+    writeData(etx);
+}
+
+void TurBoCapture::closeSerialPort()
+{
+    if (serial->isOpen())
+        serial->close();
 }
 
 void TurBoCapture::on_horizontalSpinBox_valueChanged(double arg1)
@@ -485,4 +624,18 @@ void TurBoCapture::on_newRowButton_clicked()
     char rowsText[32];
     snprintf(rowsText, sizeof(char) * 32, "Col %i", rowsCount);
     addTreeRoot(rowsText);
+}
+
+void TurBoCapture::on_resetButton_clicked()
+{
+    //Reset camera position
+    ui->captureButton->setEnabled(true);
+    running = false;
+}
+
+void TurBoCapture::on_captureButton_clicked()
+{
+    //Start moving camera
+    ui->captureButton->setEnabled(false);
+    running = true;
 }
