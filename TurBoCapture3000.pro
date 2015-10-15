@@ -16,7 +16,6 @@ INCLUDEPATH += /usr/local/include/opencv
 
 LIBS += -L/usr/local/lib \
     -lQt5Concurrent \
-    -lserial \
     -lgphoto2 \
     -lopencv_core \
     -lopencv_imgproc \

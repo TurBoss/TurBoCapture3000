@@ -102,20 +102,29 @@ TurBoCapture::TurBoCapture(QWidget *parent) :
     QBrush rxLedOffBrush(Qt::white);
     QPen rxLedPen(Qt::black);
 
-    txLedItem = txLedScene->addRect(0, 0, 15, 15, txLedPen, txLedBrush);
+    /*txLedItem = txLedScene->addRect(0, 0, 15, 15, txLedPen, txLedBrush);
     rxLedItem = rxLedScene->addRect(0, 0, 15, 15, rxLedPen, rxLedBrush);
 
     txLedScene->clear();
     rxLedScene->clear();
 
     txLedItem = txLedScene->addRect(0, 0, 15, 15, txLedPen, txLedOffBrush);
-    rxLedItem = rxLedScene->addRect(0, 0, 15, 15, rxLedPen, rxLedOffBrush);
+    rxLedItem = rxLedScene->addRect(0, 0, 15, 15, rxLedPen, rxLedOffBrush);*/
+
+    ledOn("TX");
+    ledOn("RX");
+
+    ledOff("TX");
+    ledOff("RX");
 
 
     //Init Serial Port
 
     //-- Open the serial port
     serial = new QSerialPort(this);
+
+    connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
+
     openSerialPort();
 
     //Init Camera
@@ -448,10 +457,6 @@ void TurBoCapture::ledOff(const char *led){
 
 }
 
-void TurBoCapture::on_quitButton_clicked()
-{
-    qApp->quit();
-}
 
 void TurBoCapture::openSerialPort()
 {
@@ -472,6 +477,12 @@ void TurBoCapture::openSerialPort()
     }
 }
 
+void TurBoCapture::closeSerialPort()
+{
+    if (serial->isOpen())
+        serial->close();
+}
+
 void TurBoCapture::writeData(const QByteArray &data)
 {
     ledOn("TX");
@@ -481,29 +492,22 @@ void TurBoCapture::writeData(const QByteArray &data)
 
 void TurBoCapture::readData()
 {
+    ledOn("RX");
     QByteArray data = serial->readAll();
+    ledOff("RX");
 }
 
 void TurBoCapture::runMotor(){
 
-    QByteArray msg("1");
-    QByteArray stx("STX");
-    QByteArray etx("ETX");
+    QByteArray msg("STEPFW");
+    QByteArray stx("0x02");
+    QByteArray etx("0x03");
 
     writeData(stx);
 
-    forever{
-        if(!running) break;
-        writeData(msg);
-    }
+    writeData(msg);
 
     writeData(etx);
-}
-
-void TurBoCapture::closeSerialPort()
-{
-    if (serial->isOpen())
-        serial->close();
 }
 
 void TurBoCapture::on_horizontalSpinBox_valueChanged(double arg1)
@@ -608,6 +612,11 @@ void TurBoCapture::on_takeFrameButton_clicked()
 */
 }
 
+void TurBoCapture::on_quitButton_clicked()
+{
+    qApp->quit();
+}
+
 void TurBoCapture::on_compileButton_clicked()
 {
     printf("Compile\n");
@@ -638,4 +647,6 @@ void TurBoCapture::on_captureButton_clicked()
     //Start moving camera
     ui->captureButton->setEnabled(false);
     running = true;
+    runMotor();
+    //QFuture<void> motorRunning = run(this, &TurBoCapture::runMotor);
 }
