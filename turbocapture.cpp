@@ -92,24 +92,7 @@ TurBoCapture::TurBoCapture(QWidget *parent) :
     ui->TxLed->setScene(txLedScene);
 
     rxLedScene = new QGraphicsScene(this);
-    ui->RxLed->setScene(txLedScene);
-
-    QBrush txLedBrush(Qt::green);
-    QBrush txLedOffBrush(Qt::white);
-    QPen txLedPen(Qt::black);
-
-    QBrush rxLedBrush(Qt::green);
-    QBrush rxLedOffBrush(Qt::white);
-    QPen rxLedPen(Qt::black);
-
-    /*txLedItem = txLedScene->addRect(0, 0, 15, 15, txLedPen, txLedBrush);
-    rxLedItem = rxLedScene->addRect(0, 0, 15, 15, rxLedPen, rxLedBrush);
-
-    txLedScene->clear();
-    rxLedScene->clear();
-
-    txLedItem = txLedScene->addRect(0, 0, 15, 15, txLedPen, txLedOffBrush);
-    rxLedItem = rxLedScene->addRect(0, 0, 15, 15, rxLedPen, rxLedOffBrush);*/
+    ui->RxLed->setScene(rxLedScene);
 
     ledOn("TX");
     ledOn("RX");
@@ -126,6 +109,16 @@ TurBoCapture::TurBoCapture(QWidget *parent) :
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
 
     openSerialPort();
+
+
+    stepFWv = "STEPFWV";
+    stepBWv = "STEPBWV";
+
+    stepFWh = "STEPFWH";
+    stepBWh = "STEPBWH";
+
+    stx = "0x02";
+    etx = "0x03";
 
     //Init Camera
 
@@ -487,6 +480,7 @@ void TurBoCapture::writeData(const QByteArray &data)
 {
     ledOn("TX");
     serial->write(data);
+    serial->waitForBytesWritten(1000);
     ledOff("TX");
 }
 
@@ -494,18 +488,20 @@ void TurBoCapture::readData()
 {
     ledOn("RX");
     QByteArray data = serial->readAll();
+    serial->waitForReadyRead(1000);
     ledOff("RX");
 }
 
+void TurBoCapture::startMotor(){
+
+    writeData(stx);;
+}
 void TurBoCapture::runMotor(){
 
-    QByteArray msg("STEPFW");
-    QByteArray stx("0x02");
-    QByteArray etx("0x03");
+    writeData(stepFWv);
+}
 
-    writeData(stx);
-
-    writeData(msg);
+void TurBoCapture::stopMotor(){
 
     writeData(etx);
 }
@@ -648,5 +644,4 @@ void TurBoCapture::on_captureButton_clicked()
     ui->captureButton->setEnabled(false);
     running = true;
     runMotor();
-    //QFuture<void> motorRunning = run(this, &TurBoCapture::runMotor);
 }

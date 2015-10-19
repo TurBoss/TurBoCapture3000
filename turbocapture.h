@@ -83,7 +83,11 @@ private slots:
 
     void readData();
 
+    void startMotor();
+
     void runMotor();
+
+    void stopMotor();
 
     void on_quitButton_clicked();
 
@@ -105,6 +109,15 @@ private:
     Ui::TurBoCapture *ui;
 
     QSerialPort *serial;
+
+    QByteArray stepFWv;
+    QByteArray stepBWv;
+
+    QByteArray stepFWh;
+    QByteArray stepBWh;
+
+    QByteArray stx;
+    QByteArray etx;
 
     int ret;
 
