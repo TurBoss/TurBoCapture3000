@@ -74,10 +74,6 @@ private slots:
 
     void stichv2_video(const char *file);
 
-    void ledOn(const char *led);
-
-    void ledOff(const char *led);
-
     void closeSerialPort();
 
     void openSerialPort();

@@ -90,20 +90,6 @@ TurBoCapture::TurBoCapture(QWidget *parent) :
     ui->treeWidget->setColumnCount(2);
     ui->treeWidget->setHeaderLabels(QStringList() << "Colum" << "Name");
 
-
-    txLedScene = new QGraphicsScene(this);
-    ui->TxLed->setScene(txLedScene);
-
-    rxLedScene = new QGraphicsScene(this);
-    ui->RxLed->setScene(rxLedScene);
-
-    ledOn("TX");
-    ledOn("RX");
-
-    ledOff("TX");
-    ledOff("RX");
-
-
     //Init Serial Port
 
     //-- Open the serial port
@@ -420,40 +406,6 @@ void TurBoCapture::addTreeChild(QTreeWidgetItem *parent, QString name)
     parent->addChild(pic_rows);
 }
 
-void TurBoCapture::ledOn(const char *led){
-
-    QBrush ledBrush(Qt::green);
-    QBrush ledOffBrush(Qt::white);
-    QPen ledPen(Qt::black);
-
-    if (strcmp( led, "TX") == 0){
-        txLedScene->clear();
-        txLedItem = txLedScene->addRect(0, 0, 15, 15, ledPen, ledBrush);
-    }
-    else if  (strcmp( led, "RX") == 0){
-        rxLedScene->clear();
-        rxLedItem = rxLedScene->addRect(0, 0, 15, 15, ledPen, ledBrush);
-    }
-}
-
-void TurBoCapture::ledOff(const char *led){
-
-    QBrush ledBrush(Qt::green);
-    QBrush ledOffBrush(Qt::white);
-    QPen ledPen(Qt::black);
-
-    if (strcmp( led, "TX") == 0){
-        txLedScene->clear();
-        txLedItem = txLedScene->addRect(0, 0, 15, 15, ledPen, ledOffBrush);
-    }
-    else if  (strcmp( led, "RX") == 0){
-        rxLedScene->clear();
-        rxLedItem = rxLedScene->addRect(0, 0, 15, 15, ledPen, ledOffBrush);
-    }
-
-}
-
-
 void TurBoCapture::openSerialPort()
 {
     serial->setPortName("/dev/ttyACM0");
@@ -481,18 +433,14 @@ void TurBoCapture::closeSerialPort()
 
 void TurBoCapture::writeData(const QByteArray &data)
 {
-    ledOn("TX");
     serial->write(data);
     serial->waitForBytesWritten(1000);
-    ledOff("TX");
 }
 
 void TurBoCapture::readData()
 {
-    ledOn("RX");
     QByteArray data = serial->readAll();
     serial->waitForReadyRead(1000);
-    ledOff("RX");
 }
 
 void TurBoCapture::startMotor(){
@@ -500,8 +448,10 @@ void TurBoCapture::startMotor(){
     writeData(stx);;
 }
 void TurBoCapture::runMotor(){
-
-    writeData(stepFWv);
+    while(running){
+        writeData(stepFWv);
+        QThread::msleep (100);
+    }
 }
 
 void TurBoCapture::stopMotor(){
