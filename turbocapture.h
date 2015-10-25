@@ -26,8 +26,7 @@
 
 #include <QtSerialPort/QSerialPort>
 
-#include <QThread>
-#include <QtConcurrentRun>
+#include <QTimer>
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -104,12 +103,14 @@ private slots:
 
     void on_captureButton_clicked();
 
+    void on_speedSpinBox_valueChanged(int speed);
+
 private:
     Ui::TurBoCapture *ui;
 
     QSerialPort *serial;
 
-    QFuture<void> processRunning;
+    QTimer *timer;
 
     QByteArray stepFWv;
     QByteArray stepBWv;

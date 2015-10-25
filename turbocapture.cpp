@@ -28,8 +28,6 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-#include <QThread>
-#include <qtconcurrentrun.h>
 #include <QtSerialPort/QSerialPort>
 
 #include <QMessageBox>
@@ -48,7 +46,6 @@
 using namespace cv;
 using namespace std;
 using namespace cv::xfeatures2d;
-using namespace QtConcurrent;
 
 TurBoCapture::TurBoCapture(QWidget *parent) :
     QMainWindow(parent),
@@ -108,6 +105,12 @@ TurBoCapture::TurBoCapture(QWidget *parent) :
 
     stx = "0x02";
     etx = "0x03";
+
+    // create a timer
+    timer = new QTimer(this);
+
+    // setup signal and slot
+    connect(timer, SIGNAL(timeout()), this, SLOT(runMotor()));
 
     //Init Camera
 
@@ -448,10 +451,7 @@ void TurBoCapture::startMotor(){
     writeData(stx);;
 }
 void TurBoCapture::runMotor(){
-    while(running){
-        writeData(stepFWv);
-        QThread::msleep (100);
-    }
+    writeData(stepFWv);
 }
 
 void TurBoCapture::stopMotor(){
@@ -589,7 +589,7 @@ void TurBoCapture::on_resetButton_clicked()
     //Reset camera position
     ui->captureButton->setEnabled(true);
     running = false;
-    processRunning.cancel();
+    timer->stop();
     stopMotor();
 }
 
@@ -599,6 +599,12 @@ void TurBoCapture::on_captureButton_clicked()
     ui->captureButton->setEnabled(false);
     running = true;
     startMotor();
-    processRunning = run(this, &TurBoCapture::runMotor);
 
+    timer->start(100);
+
+}
+
+void TurBoCapture::on_speedSpinBox_valueChanged(int speed)
+{
+    timer->setInterval(speed);
 }
