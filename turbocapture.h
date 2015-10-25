@@ -26,6 +26,9 @@
 
 #include <QtSerialPort/QSerialPort>
 
+#include <QThread>
+#include <QtConcurrentRun>
+
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsItem>
@@ -109,6 +112,8 @@ private:
     Ui::TurBoCapture *ui;
 
     QSerialPort *serial;
+
+    QFuture<void> processRunning;
 
     QByteArray stepFWv;
     QByteArray stepBWv;

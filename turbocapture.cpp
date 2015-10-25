@@ -28,6 +28,8 @@
 #include <stdio.h>
 #include <fcntl.h>
 
+#include <QThread>
+#include <qtconcurrentrun.h>
 #include <QtSerialPort/QSerialPort>
 
 #include <QMessageBox>
@@ -46,6 +48,7 @@
 using namespace cv;
 using namespace std;
 using namespace cv::xfeatures2d;
+using namespace QtConcurrent;
 
 TurBoCapture::TurBoCapture(QWidget *parent) :
     QMainWindow(parent),
@@ -636,6 +639,8 @@ void TurBoCapture::on_resetButton_clicked()
     //Reset camera position
     ui->captureButton->setEnabled(true);
     running = false;
+    processRunning.cancel();
+    stopMotor();
 }
 
 void TurBoCapture::on_captureButton_clicked()
@@ -643,5 +648,7 @@ void TurBoCapture::on_captureButton_clicked()
     //Start moving camera
     ui->captureButton->setEnabled(false);
     running = true;
-    runMotor();
+    startMotor();
+    processRunning = run(this, &TurBoCapture::runMotor);
+
 }
