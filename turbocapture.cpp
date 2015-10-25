@@ -97,14 +97,14 @@ TurBoCapture::TurBoCapture(QWidget *parent) :
     openSerialPort();
 
 
-    stepFWv = "STEPFWV";
-    stepBWv = "STEPBWV";
+    stepFWv = "STEPFWV\n";
+    stepBWv = "STEPBWV\n";
 
-    stepFWh = "STEPFWH";
-    stepBWh = "STEPBWH";
+    stepFWh = "STEPFWH\n";
+    stepBWh = "STEPBWH\n";
 
-    stx = "0x02";
-    etx = "0x03";
+    stx = "0x02\n";
+    etx = "0x03\n";
 
     // create a timer
     timer = new QTimer(this);
@@ -419,7 +419,8 @@ void TurBoCapture::openSerialPort()
         serial->setParity(QSerialPort::NoParity);
         serial->setStopBits(QSerialPort::OneStop);
         serial->setFlowControl(QSerialPort::NoFlowControl);
-        ui->serialPortStatus->setText("/dev/ttyACM0");
+
+        ui->serialPortStatus->setText(serial->portName());
     }
     else{
         QMessageBox msgBox;
