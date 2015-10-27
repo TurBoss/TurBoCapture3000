@@ -80,9 +80,9 @@ private slots:
 
     void on_quitButton_clicked();
 
-    void on_horizontalSpinBox_valueChanged(double arg1);
+    void on_horizontalSpinBox_valueChanged(int h);
 
-    void on_verticalSpinBox_valueChanged(double arg1);
+    void on_verticalSpinBox_valueChanged(int v);
 
     void on_takeFrameButton_clicked();
 

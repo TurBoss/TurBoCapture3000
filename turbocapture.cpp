@@ -190,22 +190,25 @@ void TurBoCapture::runMotor()
         steppsH --;
         writeData(stepFWv);
 
-        //fprintf  (stderr, "%d\n",steppsH);
-        //fflush   (stderr);
+        fprintf  (stdout, "%d\n",steppsH);
+        fflush   (stdout);
     }
     else {
         motorSpeedTimer->stop();
         stopMotor();
 
-        if (curPicsH != 0){
+        if (curPicsH > 0){
             takePicture();
             curPicsH --;
             steppsH = steppsPicH;
-            startMotor();
-            motorSpeedTimer->start(mSpeed);
 
-            fprintf  (stderr, "%d\n",curPicsH);
-            fflush   (stderr);
+            if (curPicsH != 1){
+                startMotor();
+                motorSpeedTimer->start(mSpeed);
+            }
+
+            fprintf  (stdout, "%d\n",curPicsH);
+            fflush   (stdout);
         }
         else{
             motorSpeedTimer->stop();
@@ -215,28 +218,30 @@ void TurBoCapture::runMotor()
     }
 }
 
-void TurBoCapture::stopMotor(){
+void TurBoCapture::stopMotor()
+{
 
     writeData(etx);
 }
 
-void TurBoCapture::takePicture(){
+void TurBoCapture::takePicture()
+{
 
-    fprintf  (stderr, "PIC TAKEN\n");
-    fflush   (stderr);
+    fprintf  (stdout, "PIC TAKEN\n");
+    fflush   (stdout);
 }
 
-void TurBoCapture::on_horizontalSpinBox_valueChanged(double arg1)
+void TurBoCapture::on_horizontalSpinBox_valueChanged(int h)
 {
-    horizontal = arg1;
+    horizontal = h;
 
     h_line1->setLine(0,horizontal,width,horizontal);
     h_line2->setLine(0,height-horizontal,width,height-horizontal);
 }
 
-void TurBoCapture::on_verticalSpinBox_valueChanged(double arg1)
+void TurBoCapture::on_verticalSpinBox_valueChanged(int v)
 {
-    vertical = arg1;
+    vertical = v;
 
     v_line1->setLine(vertical,0,vertical,height);
     v_line2->setLine(width-vertical,0,width-vertical,height);
@@ -291,15 +296,15 @@ void TurBoCapture::on_captureButton_clicked()
     steppsPicV = calcStepps(mStepps, frameSizeV);
 
 
-    fprintf  (stderr, "Num Pics Horizontal : %d\n",picsH);
-    fflush   (stderr);
-    fprintf  (stderr, "Num Pics Vertical : %d\n",picsV);
-    fflush   (stderr);
+    fprintf  (stdout, "Num Pics Horizontal : %d\n",picsH);
+    fflush   (stdout);
+    fprintf  (stdout, "Num Pics Vertical : %d\n",picsV);
+    fflush   (stdout);
 
-    fprintf  (stderr, "Num Stepps Horizontal : %d\n",steppsPicH);
-    fflush   (stderr);
-    fprintf  (stderr, "Num Stepps Vertical : %d\n",steppsPicV);
-    fflush   (stderr);
+    fprintf  (stdout, "Num Stepps Horizontal : %d\n",steppsPicH);
+    fflush   (stdout);
+    fprintf  (stdout, "Num Stepps Vertical : %d\n",steppsPicV);
+    fflush   (stdout);
 
     curPicsH = picsH;
     curPicsV = picsV;

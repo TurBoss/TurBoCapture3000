@@ -17,7 +17,7 @@
    <string>TurBoCapture</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QDoubleSpinBox" name="horizontalSpinBox">
+   <widget class="QSpinBox" name="horizontalSpinBox">
     <property name="geometry">
      <rect>
       <x>100</x>
@@ -25,9 +25,6 @@
       <width>74</width>
       <height>31</height>
      </rect>
-    </property>
-    <property name="maximum">
-     <double>999.990000000000009</double>
     </property>
    </widget>
    <widget class="QPushButton" name="quitButton">
@@ -43,7 +40,7 @@
      <string>Quit</string>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="verticalSpinBox">
+   <widget class="QSpinBox" name="verticalSpinBox">
     <property name="geometry">
      <rect>
       <x>100</x>
@@ -51,9 +48,6 @@
       <width>74</width>
       <height>31</height>
      </rect>
-    </property>
-    <property name="maximum">
-     <double>999.990000000000009</double>
     </property>
    </widget>
    <widget class="QGraphicsView" name="graphicsView">
