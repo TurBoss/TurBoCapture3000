@@ -21,6 +21,7 @@
 #include "ui_turbocapture.h"
 
 #include "photo.h"
+#include "stich.h"
 
 #include "mat2qimage.h"
 
@@ -95,11 +96,19 @@ TurBoCapture::TurBoCapture(QWidget *parent) :
     stx = "0x02\n";
     etx = "0x03\n";
 
-    mSpeed = 100;
-    mStepps = 12;
+    mSpeed = 50;
+    ui->speedSpinBox->setValue(mSpeed);
 
-    frameSizeH = 560;
-    frameSizeV = 480;
+    mStepps = 1;
+    ui->steppsSpinBox->setValue(mStepps);
+
+    frameSizeH = 56;
+    frameSizeV = 48;
+
+    ui->horizontalSurfaceSpinBox->setValue(frameSizeH);
+    ui->verticalSurfaceSpinBox->setValue(frameSizeV);
+
+
 
     // create a timer
     motorSpeedTimer = new QTimer(this);
@@ -111,14 +120,10 @@ TurBoCapture::TurBoCapture(QWidget *parent) :
 
 TurBoCapture::~TurBoCapture()
 {
-
     delete ui;
-
+    stopMotor();
     closeSerialPort();
-
 }
-
-
 
 
 void TurBoCapture::addTreeRoot(QString name)
@@ -176,27 +181,49 @@ void TurBoCapture::readData()
 
 void TurBoCapture::startMotor()
 {
-
     writeData(stx);;
 }
 void TurBoCapture::runMotor()
 {
+
     if (steppsH > 0){
         steppsH --;
         writeData(stepFWv);
 
-        fprintf  (stderr, "%d\n",steppsH);
-        fflush   (stderr);
+        //fprintf  (stderr, "%d\n",steppsH);
+        //fflush   (stderr);
     }
     else {
         motorSpeedTimer->stop();
         stopMotor();
+
+        if (curPicsH != 0){
+            takePicture();
+            curPicsH --;
+            steppsH = steppsPicH;
+            startMotor();
+            motorSpeedTimer->start(mSpeed);
+
+            fprintf  (stderr, "%d\n",curPicsH);
+            fflush   (stderr);
+        }
+        else{
+            motorSpeedTimer->stop();
+            stopMotor();
+            ui->captureButton->setEnabled(true);
+        }
     }
 }
 
 void TurBoCapture::stopMotor(){
 
     writeData(etx);
+}
+
+void TurBoCapture::takePicture(){
+
+    fprintf  (stderr, "PIC TAKEN\n");
+    fflush   (stderr);
 }
 
 void TurBoCapture::on_horizontalSpinBox_valueChanged(double arg1)
@@ -222,7 +249,6 @@ void TurBoCapture::on_takeFrameButton_clicked()
 
 void TurBoCapture::on_quitButton_clicked()
 {
-    stopMotor();
     qApp->quit();
 }
 
@@ -264,12 +290,28 @@ void TurBoCapture::on_captureButton_clicked()
     steppsPicH = calcStepps(mStepps, frameSizeH);
     steppsPicV = calcStepps(mStepps, frameSizeV);
 
+
+    fprintf  (stderr, "Num Pics Horizontal : %d\n",picsH);
+    fflush   (stderr);
+    fprintf  (stderr, "Num Pics Vertical : %d\n",picsV);
+    fflush   (stderr);
+
+    fprintf  (stderr, "Num Stepps Horizontal : %d\n",steppsPicH);
+    fflush   (stderr);
+    fprintf  (stderr, "Num Stepps Vertical : %d\n",steppsPicV);
+    fflush   (stderr);
+
+    curPicsH = picsH;
+    curPicsV = picsV;
+
     steppsH = steppsPicH;
     steppsV = steppsPicV;
 
     running = true;
 
     startMotor();
+
+    takePicture();
 
     motorSpeedTimer->start(mSpeed);
 
@@ -281,24 +323,24 @@ void TurBoCapture::on_speedSpinBox_valueChanged(int speed)
     motorSpeedTimer->setInterval(mSpeed);
 }
 
-void TurBoCapture::on_horizontalSurfaceSpinBox_valueChanged(int mmeters)
+void TurBoCapture::on_horizontalSurfaceSpinBox_valueChanged(int mm)
 {
-    surfaceH = mmeters;
+    surfaceH = mm;
 }
 
-void TurBoCapture::on_verticalSurfaceSpinBox_valueChanged(int mmeters)
+void TurBoCapture::on_verticalSurfaceSpinBox_valueChanged(int mm)
 {
-    surfaceV = mmeters;
+    surfaceV = mm;
 }
 
-void TurBoCapture::on_steepsSpinBox_valueChanged(int stepps)
+void TurBoCapture::on_steppsSpinBox_valueChanged(int stepps)
 {
     mStepps = stepps;
 }
 
-int TurBoCapture::calcPics( int meters, int picSize)
+int TurBoCapture::calcPics( int mm, int picSize)
 {
-    int numPics = meters/picSize;
+    int numPics = mm/picSize;
     return numPics;
 }
 

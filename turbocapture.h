@@ -72,7 +72,9 @@ private slots:
 
     void stopMotor();
 
-    int calcPics(int meters, int picSize );
+    void takePicture();
+
+    int calcPics(int mm, int picSize );
 
     int calcStepps(int stepps, int picSize);
 
@@ -94,11 +96,11 @@ private slots:
 
     void on_speedSpinBox_valueChanged(int speed);
 
-    void on_horizontalSurfaceSpinBox_valueChanged(int meters);
+    void on_horizontalSurfaceSpinBox_valueChanged(int mm);
 
-    void on_verticalSurfaceSpinBox_valueChanged(int meters);
+    void on_verticalSurfaceSpinBox_valueChanged(int mm);
 
-    void on_steepsSpinBox_valueChanged(int stepps);
+    void on_steppsSpinBox_valueChanged(int stepps);
 
 private:
     Ui::TurBoCapture *ui;
@@ -139,6 +141,9 @@ private:
 
     int picsH;
     int picsV;
+
+    int curPicsH;
+    int curPicsV;
 
     int steppsPicH;
     int steppsPicV;
