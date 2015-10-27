@@ -21,7 +21,7 @@
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>560</y>
+      <y>580</y>
       <width>74</width>
       <height>31</height>
      </rect>
@@ -46,8 +46,8 @@
    <widget class="QDoubleSpinBox" name="verticalSpinBox">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>560</y>
+      <x>100</x>
+      <y>620</y>
       <width>74</width>
       <height>31</height>
      </rect>
@@ -78,8 +78,8 @@
    <widget class="QLabel" name="horizontalLabel">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>540</y>
+      <x>20</x>
+      <y>580</y>
       <width>71</width>
       <height>21</height>
      </rect>
@@ -91,8 +91,8 @@
    <widget class="QLabel" name="verticalLabel">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>540</y>
+      <x>20</x>
+      <y>620</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -112,22 +112,6 @@
     </property>
     <property name="text">
      <string>Take Frame</string>
-    </property>
-   </widget>
-   <widget class="QProgressBar" name="progressBar">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>650</y>
-      <width>831</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>0</number>
     </property>
    </widget>
    <widget class="QTreeWidget" name="treeWidget">
@@ -171,36 +155,42 @@
      <string>New Row</string>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="verticalSurfacesSpinBox">
+   <widget class="QSpinBox" name="verticalSurfaceSpinBox">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>600</y>
+      <x>200</x>
+      <y>620</y>
       <width>74</width>
       <height>31</height>
      </rect>
     </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
     <property name="maximum">
-     <double>999.990000000000009</double>
+     <number>999</number>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="horizontalSurfaceSpinBox">
+   <widget class="QSpinBox" name="horizontalSurfaceSpinBox">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>600</y>
+      <x>200</x>
+      <y>580</y>
       <width>74</width>
       <height>31</height>
      </rect>
     </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
     <property name="maximum">
-     <double>999.990000000000009</double>
+     <number>999</number>
     </property>
    </widget>
    <widget class="QLabel" name="cropLabel">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>100</x>
       <y>560</y>
       <width>66</width>
       <height>21</height>
@@ -213,30 +203,14 @@
    <widget class="QLabel" name="surfaceLabel">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>600</y>
+      <x>200</x>
+      <y>560</y>
       <width>66</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>Surface</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="proccessLabel">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>400</x>
-      <y>680</y>
-      <width>66</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Proccess</string>
     </property>
    </widget>
    <widget class="QPushButton" name="captureButton">
@@ -265,62 +239,10 @@
      <string>Reset</string>
     </property>
    </widget>
-   <widget class="QLabel" name="TxLabel">
-    <property name="geometry">
-     <rect>
-      <x>750</x>
-      <y>690</y>
-      <width>21</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TX</string>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="TxLed">
-    <property name="geometry">
-     <rect>
-      <x>780</x>
-      <y>690</y>
-      <width>20</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Plain</enum>
-    </property>
-   </widget>
-   <widget class="QLabel" name="RxLabel">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>690</y>
-      <width>21</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>RX</string>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="RxLed">
-    <property name="geometry">
-     <rect>
-      <x>830</x>
-      <y>690</y>
-      <width>20</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Plain</enum>
-    </property>
-   </widget>
    <widget class="QLabel" name="serialLabel">
     <property name="geometry">
      <rect>
-      <x>555</x>
+      <x>640</x>
       <y>690</y>
       <width>71</width>
       <height>21</height>
@@ -333,7 +255,7 @@
    <widget class="QLabel" name="serialPortStatus">
     <property name="geometry">
      <rect>
-      <x>630</x>
+      <x>720</x>
       <y>690</y>
       <width>111</width>
       <height>21</height>
@@ -372,9 +294,9 @@
    <widget class="QSpinBox" name="speedSpinBox">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>560</y>
-      <width>51</width>
+      <x>360</x>
+      <y>580</y>
+      <width>61</width>
       <height>30</height>
      </rect>
     </property>
@@ -391,16 +313,83 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>305</x>
-      <y>560</y>
-      <width>91</width>
+      <x>300</x>
+      <y>580</y>
+      <width>41</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Motor speed</string>
+     <string>Speed</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>550</y>
+      <width>66</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Motor</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>620</y>
+      <width>51</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Steeps</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="steepsSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>620</y>
+      <width>61</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="value">
+     <number>12</number>
+    </property>
+   </widget>
+   <zorder>horizontalSpinBox</zorder>
+   <zorder>quitButton</zorder>
+   <zorder>verticalSpinBox</zorder>
+   <zorder>graphicsView</zorder>
+   <zorder>horizontalLabel</zorder>
+   <zorder>verticalLabel</zorder>
+   <zorder>takeFrameButton</zorder>
+   <zorder>treeWidget</zorder>
+   <zorder>compileButton</zorder>
+   <zorder>newRowButton</zorder>
+   <zorder>verticalSurfaceSpinBox</zorder>
+   <zorder>horizontalSurfaceSpinBox</zorder>
+   <zorder>cropLabel</zorder>
+   <zorder>surfaceLabel</zorder>
+   <zorder>captureButton</zorder>
+   <zorder>resetButton</zorder>
+   <zorder>serialLabel</zorder>
+   <zorder>serialPortStatus</zorder>
+   <zorder>camLabel</zorder>
+   <zorder>camStatusLabel</zorder>
+   <zorder>label</zorder>
+   <zorder>speedSpinBox</zorder>
+   <zorder>label_2</zorder>
+   <zorder>label_3</zorder>
+   <zorder>steepsSpinBox</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
@@ -410,7 +399,7 @@
   <tabstop>horizontalSpinBox</tabstop>
   <tabstop>verticalSpinBox</tabstop>
   <tabstop>horizontalSurfaceSpinBox</tabstop>
-  <tabstop>verticalSurfacesSpinBox</tabstop>
+  <tabstop>verticalSurfaceSpinBox</tabstop>
   <tabstop>takeFrameButton</tabstop>
   <tabstop>newRowButton</tabstop>
   <tabstop>compileButton</tabstop>

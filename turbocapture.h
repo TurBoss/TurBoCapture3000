@@ -20,7 +20,6 @@
 #ifndef TURBOCAPTURE_H
 #define TURBOCAPTURE_H
 
-#include <gphoto2/gphoto2-camera.h>
 
 #include <QMainWindow>
 
@@ -55,23 +54,9 @@ public:
 
 private slots:
 
-
-    static void ctx_error_func (GPContext *context, const char *str, void *data);
-
-    static void ctx_status_func (GPContext *context, const char *str, void *data);
-
-
     void addTreeRoot(QString name);
 
     void addTreeChild(QTreeWidgetItem *parent, QString name);
-
-    void capture(const char *filename);
-
-    void stich(const char *fileA, const char *fileB);
-
-    void stichv2(const char *fileA, const char *fileB);
-
-    void stichv2_video(const char *file);
 
     void closeSerialPort();
 
@@ -86,6 +71,10 @@ private slots:
     void runMotor();
 
     void stopMotor();
+
+    int calcPics(int meters, int picSize );
+
+    int calcStepps(int stepps, int picSize);
 
     void on_quitButton_clicked();
 
@@ -105,12 +94,18 @@ private slots:
 
     void on_speedSpinBox_valueChanged(int speed);
 
+    void on_horizontalSurfaceSpinBox_valueChanged(int meters);
+
+    void on_verticalSurfaceSpinBox_valueChanged(int meters);
+
+    void on_steepsSpinBox_valueChanged(int stepps);
+
 private:
     Ui::TurBoCapture *ui;
 
     QSerialPort *serial;
 
-    QTimer *timer;
+    QTimer *motorSpeedTimer;
 
     QByteArray stepFWv;
     QByteArray stepBWv;
@@ -121,12 +116,8 @@ private:
     QByteArray stx;
     QByteArray etx;
 
-    int ret;
 
     bool running;
-
-    Camera *camera;
-    GPContext *context;
 
     int width;
     int height;
@@ -137,17 +128,30 @@ private:
     int colsCount;
     int rowsCount;
 
+    int surfaceH;
+    int surfaceV;
+
+    int mSpeed;
+    int mStepps;
+
+    int frameSizeH;
+    int frameSizeV;
+
+    int picsH;
+    int picsV;
+
+    int steppsPicH;
+    int steppsPicV;
+
+    int steppsH;
+    int steppsV;
+
     QGraphicsScene *scene;
+
     QGraphicsLineItem *h_line1;
     QGraphicsLineItem *h_line2;
     QGraphicsLineItem *v_line1;
     QGraphicsLineItem *v_line2;
-
-    QGraphicsScene *txLedScene;
-    QGraphicsRectItem *txLedItem;
-
-    QGraphicsScene *rxLedScene;
-    QGraphicsRectItem *rxLedItem;
 
 
     QTreeWidgetItem *pic_cols;

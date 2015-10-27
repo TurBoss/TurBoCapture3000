@@ -33,9 +33,13 @@ LIBS += -L/usr/local/lib \
 
 SOURCES += main.cpp\
         turbocapture.cpp\
-        mat2qimage.cpp
+        mat2qimage.cpp \
+    photo.cpp \
+    stich.cpp
 
 HEADERS  += turbocapture.h\
-        mat2qimage.h
+        mat2qimage.h \
+    photo.h \
+    stich.h
 
 FORMS    += turbocapture.ui
