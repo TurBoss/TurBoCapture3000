@@ -121,8 +121,6 @@ TurBoCapture::TurBoCapture(QWidget *parent) :
 TurBoCapture::~TurBoCapture()
 {
     delete ui;
-    stopMotor();
-    closeSerialPort();
 }
 
 

@@ -43,8 +43,8 @@ void Stich::stich(const char *fileA, const char *fileB)
     Mat gray_image2;
 
     // Convert to Grayscale
-    cvtColor( img_1, gray_image1, CV_RGB2GRAY );
-    cvtColor( img_2, gray_image2, CV_RGB2GRAY );
+    cvtColor( img_1, gray_image1, COLOR_BGR2BGRA );
+    cvtColor( img_2, gray_image2, COLOR_BGR2BGRA );
 
     if( !gray_image1.data || !gray_image2.data )
         { std::cout<< " --(!) Error reading images " << std::endl; }
@@ -108,7 +108,7 @@ void Stich::stich(const char *fileA, const char *fileB)
     }
 
     // Find the Homography Matrix
-    Mat H = findHomography( obj, scene, CV_RANSAC );
+    Mat H = findHomography( obj, scene, RANSAC );
 
     // Use the Homography Matrix to warp the images
     cv::Mat result;
@@ -128,13 +128,12 @@ void Stich::stichv2(const char *fileA, const char *fileB)
     vImg.push_back( imread(fileB) );
 
 
-    Stitcher stitcher = Stitcher::createDefault();
-
+    Ptr<Stitcher> stitcher = Stitcher::create();
 
     unsigned long AAtime=0, BBtime=0; //check processing time
     AAtime = getTickCount(); //check processing time
 
-    Stitcher::Status status = stitcher.stitch(vImg, rImg);
+    Stitcher::Status status = stitcher->stitch(vImg, rImg);
 
     BBtime = getTickCount(); //check processing time
     printf("%.2lf sec \n",  (BBtime - AAtime)/getTickFrequency() ); //check processing time
@@ -168,13 +167,13 @@ void Stich::stichv2_video(const char *file)
 
 
     }
-    Stitcher stitcher = Stitcher::createDefault();
+    Ptr<Stitcher> stitcher = Stitcher::create();
 
 
     unsigned long AAtime=0, BBtime=0; //check processing time
     AAtime = getTickCount(); //check processing time
 
-    Stitcher::Status status = stitcher.stitch(vImg, rImg);
+    Stitcher::Status status = stitcher->stitch(vImg, rImg);
 
     BBtime = getTickCount(); //check processing time
     printf("%.2lf sec \n",  (BBtime - AAtime)/getTickFrequency() ); //check processing time

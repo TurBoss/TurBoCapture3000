@@ -12,7 +12,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = TurBoCapture3000
 TEMPLATE = app
 
-INCLUDEPATH += /usr/local/include/opencv
+INCLUDEPATH += /usr/include/opencv4
 
 LIBS += -L/usr/local/lib \
     -lQt5Concurrent \

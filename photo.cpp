@@ -141,7 +141,8 @@ void Photo::capture (const char *filename) {
 
 
 
-/*void Photo::shootPhoto () {
+/*
+void Photo::shootPhoto () {
 
     if (ret == GP_OK) {
 
@@ -175,52 +176,52 @@ void Photo::capture (const char *filename) {
 
     }
 
-    /*
-    char filename[32];
-    VideoCapture cap(-1); // open the default camera
-    if(cap.isOpened()){  // check if we succeeded
+//    char filename[32];
+//    VideoCapture cap(-1); // open the default camera
+//    if(cap.isOpened()){  // check if we succeeded
 
-        Mat frame;
-        Mat viewFrame;
-        Mat pic16bit;
-        Mat roiFrame;
+//        Mat frame;
+//        Mat viewFrame;
+//        Mat pic16bit;
+//        Mat roiFrame;
 
-        cap >> frame; // get a new frame from camera
+//        cap >> frame; // get a new frame from camera
 
-        double sizeX = width - (vertical*2);
-        double sizeY = height - (horizontal*2);
+//        double sizeX = width - (vertical*2);
+//        double sizeY = height - (horizontal*2);
 
-        double sizeW = cap.get(CV_CAP_PROP_FRAME_WIDTH);    // Acquire input size
-        double sizeH = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
+//        double sizeW = cap.get(CV_CAP_PROP_FRAME_WIDTH);    // Acquire input size
+//        double sizeH = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
 
-        printf("View size X %4.2f\n",sizeX);
-        printf("View size Y %4.2f\n",sizeY);
+//        printf("View size X %4.2f\n",sizeX);
+//        printf("View size Y %4.2f\n",sizeY);
 
-        printf("Image size W %4.2f\n",sizeW);
-        printf("Image size H %4.2f\n",sizeH);
-
-
-        //roiFrame = frame(Rect ());
-
-        QImage qImage = Mat2QImage(frame);
-        QPixmap pixmap = QPixmap::fromImage(qImage);
-
-        scene->addPixmap(pixmap.scaled(QSize(width,height)));
-
-        frame.convertTo(pic16bit, CV_16UC3, 255);
+//        printf("Image size W %4.2f\n",sizeW);
+//        printf("Image size H %4.2f\n",sizeH);
 
 
-        snprintf(filename, sizeof(char) * 32, "pictures/file%i-%i.tiff", rowsCount,colsCount);
+//        //roiFrame = frame(Rect ());
 
-        QTreeWidgetItem *treeItem = new QTreeWidgetItem(ui->treeWidget);
-        QString qFilename = QString::fromUtf8(filename);
+//        QImage qImage = Mat2QImage(frame);
+//        QPixmap pixmap = QPixmap::fromImage(qImage);
 
-        addTreeChild(treeItem, qFilename);
+//        scene->addPixmap(pixmap.scaled(QSize(width,height)));
 
-        imwrite(filename, pic16bit);
+//        frame.convertTo(pic16bit, CV_16UC3, 255);
 
-        colsCount ++;
 
-    }
-    */
-//}
+//        snprintf(filename, sizeof(char) * 32, "pictures/file%i-%i.tiff", rowsCount,colsCount);
+
+//        QTreeWidgetItem *treeItem = new QTreeWidgetItem(ui->treeWidget);
+//        QString qFilename = QString::fromUtf8(filename);
+
+//        addTreeChild(treeItem, qFilename);
+
+//        imwrite(filename, pic16bit);
+
+//        colsCount ++;
+
+//    }
+}
+*/
+

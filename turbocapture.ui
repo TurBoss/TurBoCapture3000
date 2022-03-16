@@ -30,8 +30,8 @@
    <widget class="QPushButton" name="quitButton">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>620</y>
+      <x>770</x>
+      <y>630</y>
       <width>96</width>
       <height>31</height>
      </rect>
@@ -98,8 +98,8 @@
    <widget class="QPushButton" name="takeFrameButton">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>580</y>
+      <x>650</x>
+      <y>560</y>
       <width>96</width>
       <height>31</height>
      </rect>
@@ -126,8 +126,8 @@
    <widget class="QPushButton" name="compileButton">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>620</y>
+      <x>620</x>
+      <y>640</y>
       <width>96</width>
       <height>31</height>
      </rect>
@@ -139,8 +139,8 @@
    <widget class="QPushButton" name="newRowButton">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>580</y>
+      <x>770</x>
+      <y>570</y>
       <width>96</width>
       <height>31</height>
      </rect>
@@ -210,8 +210,8 @@
    <widget class="QPushButton" name="captureButton">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>580</y>
+      <x>520</x>
+      <y>560</y>
       <width>96</width>
       <height>31</height>
      </rect>
@@ -223,8 +223,8 @@
    <widget class="QPushButton" name="resetButton">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>620</y>
+      <x>510</x>
+      <y>630</y>
       <width>96</width>
       <height>31</height>
      </rect>

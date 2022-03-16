@@ -22,9 +22,9 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    TurBoCapture w;
-    w.show();
+    QApplication app(argc, argv);
+    TurBoCapture window;
+    window.show();
 
-    return a.exec();
+    return app.exec();
 }
